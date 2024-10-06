@@ -1,0 +1,36 @@
+name: Deploy Project
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  register-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Set environment variables
+        run: |
+          echo "GIT_REPO=shnepsel/test" >> $GITHUB_ENV
+          echo "GIT_TOKEN=${{ secrets.GIT_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Run Docker Compose
+        run: |
+          docker compose up -d
+
+      - name: Wait for the runner container to be ready
+        run: sleep 10
+
+      - name: Register and start GitHub Actions runner inside container
+        run: |
+          docker exec -it runner-container-name bash -c "
+            mkdir -p actions-runner && cd actions-runner &&
+            curl -o actions-runner-linux-x64-2.319.1.tar.gz -L https://github.com/actions/runner/releases/download/v2.319.1/actions-runner-linux-x64-2.319.1.tar.gz &&
+            echo '3f6efb7488a183e291fc2c62876e14c9ee732864173734facc85a1bfb1744464  actions-runner-linux-x64-2.319.1.tar.gz' | shasum -a 256 -c &&
+            tar xzf ./actions-runner-linux-x64-2.319.1.tar.gz &&
+            ./config.sh --url https://github.com/${{ env.GIT_REPO }} --token ${{ env.GIT_TOKEN }} --unattended --replace &&
+            ./run.sh"
+

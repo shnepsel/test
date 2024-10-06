@@ -5,6 +5,7 @@ services:
     environment:
       - REPO=${GIT_REPO}
       - TOKEN=${GIT_TOKEN}
+    command: ./run.sh
     deploy:
       mode: replicated
       replicas: 1

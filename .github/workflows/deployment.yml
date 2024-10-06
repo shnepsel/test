@@ -12,6 +12,12 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
+      - name: Install Docker
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+          sudo usermod -aG docker $USER
+
       - name: Set environment variables
         run: |
           echo "GIT_REPO=shnepsel/test" >> $GITHUB_ENV

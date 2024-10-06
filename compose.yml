@@ -15,15 +15,16 @@ services:
         reservations:
           cpus: '0.25'
           memory: 128M
-    postgres:
-      image: postgres:latest
-      container_name: postgres_db                                                                     
-      restart: always
-      environment:
-        POSTGRES_DB: bgrt
-        POSTGRES_USER: shnepsel
-        POSTGRES_PASSWORD: 111
-      volumes:
-        - ./db_data:/var/lib/postgresql/data
-      ports:
-        - "5432:5432"
+ 
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db                                                                     
+    restart: always
+    environment:
+      POSTGRES_DB: bgrt
+      POSTGRES_USER: shnepsel
+      POSTGRES_PASSWORD: 111
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"

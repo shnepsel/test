@@ -1,0 +1,29 @@
+services:
+  runner:
+    image: scelle/github-actions-self-hosted-runner
+    restart: always
+    environment:
+      - REPO=${GIT_REPO}
+      - TOKEN=${GIT_TOKEN}
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.35'
+          memory: 300M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    postgres:
+      image: postgres:latest
+      container_name: postgres_db                                                                     
+      restart: always
+      environment:
+        POSTGRES_DB: bgrt
+        POSTGRES_USER: shnepsel
+        POSTGRES_PASSWORD: 111
+      volumes:
+        - ./db_data:/var/lib/postgresql/data
+      ports:
+        - "5432:5432"
